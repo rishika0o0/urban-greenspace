@@ -68,29 +68,30 @@ document.addEventListener('DOMContentLoaded', () => {
   function applyLayerColor(element, tile, layer) {
     if (layer === 'pred') {
       if (tile.label === 'green') {
-        element.style.background = '#22c55e';
-        element.style.border = '1px solid #16a34a';
-        element.style.boxShadow = '0 0 8px rgba(34, 197, 94, 0.4)';
+        element.style.background = '#4a7c59';
+        element.style.border = '1px solid #3c6350';
+        element.style.boxShadow = 'none';
       } else {
-        element.style.background = '#475569';
-        element.style.border = '1px solid #334155';
+        element.style.background = '#334155';
+        element.style.border = '1px solid #1e293b';
         element.style.boxShadow = 'none';
       }
     } else if (layer === 'ndvi') {
       const v = Math.max(0, Math.min(1, (tile.ndvi + 0.1) / 0.7)); // scale ~ -0.1 to 0.6
-      const r = Math.round(255 * (1 - v));
-      const g = Math.round(255 * v);
-      element.style.background = `rgb(${r}, ${g}, 40)`;
-      element.style.border = '1px solid rgba(255,255,255,0.15)';
-      element.style.boxShadow = v > 0.5 ? '0 0 6px rgba(34, 197, 94, 0.3)' : 'none';
+      const r = Math.round(140 * (1 - v) + 50);
+      const g = Math.round(120 * v + 50);
+      const b = 60;
+      element.style.background = `rgb(${r}, ${g}, ${b})`;
+      element.style.border = '1px solid rgba(255,255,255,0.06)';
+      element.style.boxShadow = 'none';
     } else if (layer === 'sat') {
       // Natural satellite RGB appearance
       if (tile.label === 'green') {
-        element.style.background = '#1a472a';
-        element.style.border = '1px solid #2d6a4f';
+        element.style.background = '#284b35';
+        element.style.border = '1px solid #1d3626';
       } else {
-        element.style.background = '#6c757d';
-        element.style.border = '1px solid #495057';
+        element.style.background = '#475569';
+        element.style.border = '1px solid #334155';
       }
       element.style.boxShadow = 'none';
     }
@@ -221,18 +222,18 @@ document.addEventListener('DOMContentLoaded', () => {
       if (thresh < 0.25) {
         simStatus.textContent = 'Permissive (Includes scrub & sparse lawns)';
         simStatus.className = 'badge-pill';
-        simStatus.style.background = 'rgba(234, 179, 8, 0.15)';
-        simStatus.style.color = '#facc15';
+        simStatus.style.background = 'rgba(255, 255, 255, 0.05)';
+        simStatus.style.color = '#cbd5e1';
       } else if (thresh > 0.38) {
         simStatus.textContent = 'Strict (Dense evergreen forest only)';
         simStatus.className = 'badge-pill';
-        simStatus.style.background = 'rgba(56, 189, 248, 0.15)';
-        simStatus.style.color = '#38bdf8';
+        simStatus.style.background = 'rgba(255, 255, 255, 0.05)';
+        simStatus.style.color = '#cbd5e1';
       } else {
         simStatus.textContent = 'Optimal (Standard Sentinel-2 SR)';
         simStatus.className = 'badge-pill optimal';
-        simStatus.style.background = 'rgba(52, 211, 153, 0.15)';
-        simStatus.style.color = '#34d399';
+        simStatus.style.background = 'rgba(74, 124, 89, 0.2)';
+        simStatus.style.color = '#8fae9b';
       }
     });
   }
@@ -277,8 +278,8 @@ document.addEventListener('DOMContentLoaded', () => {
     modalTileId.textContent = tile.id;
     modalImg.src = `assets/tiles/${tile.id}.png`;
     modalBadge.textContent = isGreen ? 'Green Canopy' : 'Urban Impervious';
-    modalBadge.style.background = isGreen ? 'rgba(34, 197, 94, 0.9)' : 'rgba(71, 85, 105, 0.9)';
-    modalBadge.style.color = isGreen ? '#022c22' : '#ffffff';
+    modalBadge.style.background = isGreen ? 'rgba(50, 95, 68, 0.85)' : 'rgba(71, 85, 105, 0.85)';
+    modalBadge.style.color = '#f1f5f9';
 
     modalCaption.textContent = isGreen
       ? 'High photosynthetic activity and dense near-infrared reflectance signature.'
