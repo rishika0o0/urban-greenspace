@@ -46,397 +46,284 @@ CUSTOM_CSS = """
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
-html, body, [class*="css"] {
+html, body, [class*="css"], [data-testid="stAppViewContainer"], .main, .main .block-container {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: #0a171d !important;
+    color: #94a3b8 !important;
 }
 
-/* Hide default streamlit header padding */
-.block-container { padding-top: 1rem !important; }
-
-/* ---- Top banner ---- */
-.top-banner {
-    background: linear-gradient(135deg, #0f2027 0%, #1a3a2a 50%, #0d2818 100%);
-    border-radius: 12px;
-    padding: 28px 36px 22px 36px;
-    margin-bottom: 24px;
-    border: 1px solid rgba(74, 222, 128, 0.15);
-    box-shadow: 0 4px 24px rgba(0,0,0,0.35);
-    position: relative;
-    overflow: hidden;
-}
-.top-banner::before {
-    content: "";
-    position: absolute;
-    top: -60px; right: -60px;
-    width: 220px; height: 220px;
-    background: radial-gradient(circle, rgba(74,222,128,0.08) 0%, transparent 70%);
-    pointer-events: none;
-}
-.banner-badge {
-    display: inline-block;
-    background: rgba(74, 222, 128, 0.12);
-    border: 1px solid rgba(74, 222, 128, 0.35);
-    color: #4ade80;
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 2px;
-    padding: 4px 12px;
-    border-radius: 20px;
-    margin-bottom: 12px;
-    text-transform: uppercase;
-}
-.banner-title {
-    font-size: 28px;
-    font-weight: 700;
-    color: #f0fdf4;
-    margin: 6px 0 8px 0;
-    line-height: 1.2;
-    letter-spacing: -0.3px;
-}
-.banner-subtitle {
-    font-size: 13.5px;
-    color: #86efac;
-    font-weight: 400;
-    opacity: 0.85;
-    max-width: 680px;
-    line-height: 1.5;
-}
-.banner-meta {
-    margin-top: 16px;
-    display: flex;
-    gap: 20px;
-    flex-wrap: wrap;
-}
-.banner-pill {
-    background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 6px;
-    padding: 4px 12px;
-    font-size: 11.5px;
-    color: #d1fae5;
-    font-weight: 500;
-}
-
-/* ---- KPI Cards ---- */
-.kpi-row {
-    display: flex;
-    gap: 14px;
-    margin-bottom: 24px;
-    flex-wrap: wrap;
-}
-.kpi-card {
-    flex: 1;
-    min-width: 140px;
-    background: #ffffff;
-    border: 1px solid #e2e8f0;
-    border-radius: 10px;
-    padding: 16px 20px;
-    box-shadow: 0 1px 6px rgba(0,0,0,0.06);
-    position: relative;
-    overflow: hidden;
-}
-.kpi-card::after {
-    content: "";
-    position: absolute;
-    top: 0; left: 0;
-    width: 4px; height: 100%;
-    border-radius: 10px 0 0 10px;
-}
-.kpi-card.green::after  { background: #22c55e; }
-.kpi-card.blue::after   { background: #3b82f6; }
-.kpi-card.slate::after  { background: #64748b; }
-.kpi-card.amber::after  { background: #f59e0b; }
-.kpi-card.purple::after { background: #8b5cf6; }
-
-.kpi-label {
-    font-size: 11px;
-    font-weight: 600;
-    color: #94a3b8;
-    letter-spacing: 0.8px;
-    text-transform: uppercase;
-    margin-bottom: 6px;
-}
-.kpi-value {
-    font-size: 26px;
-    font-weight: 700;
-    color: #0f172a;
-    line-height: 1;
-}
-.kpi-sub {
-    font-size: 11.5px;
-    color: #64748b;
-    margin-top: 4px;
-    font-weight: 400;
-}
-.kpi-badge {
-    display: inline-block;
-    font-size: 10px;
-    font-weight: 600;
-    padding: 2px 8px;
-    border-radius: 10px;
-    margin-top: 6px;
-}
-.badge-green  { background: #dcfce7; color: #15803d; }
-.badge-blue   { background: #dbeafe; color: #1d4ed8; }
-.badge-slate  { background: #f1f5f9; color: #475569; }
-.badge-amber  { background: #fef3c7; color: #b45309; }
-.badge-purple { background: #ede9fe; color: #7c3aed; }
-
-/* ---- Section headers ---- */
-.section-header {
-    font-size: 13px;
-    font-weight: 600;
-    color: #475569;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    border-bottom: 2px solid #e2e8f0;
-    padding-bottom: 6px;
-    margin-bottom: 14px;
-    margin-top: 4px;
-}
-
-/* ---- Map container ---- */
-.map-container {
-    border-radius: 12px;
-    overflow: hidden;
-    border: 1px solid #e2e8f0;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-}
-
-/* ---- Sidebar ---- */
-.sidebar-section {
-    background: #f8fafc;
-    border: 1px solid #e2e8f0;
-    border-radius: 10px;
-    padding: 14px 16px;
-    margin-bottom: 14px;
-}
-.sidebar-section-title {
-    font-size: 11px;
-    font-weight: 700;
-    color: #64748b;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    margin-bottom: 10px;
-}
-.status-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    background: #f0fdf4;
-    border: 1px solid #bbf7d0;
-    border-radius: 20px;
-    padding: 5px 12px;
-    font-size: 11px;
-    font-weight: 600;
-    color: #15803d;
-    margin-bottom: 14px;
-}
-.status-dot {
-    width: 7px; height: 7px;
-    background: #22c55e;
-    border-radius: 50%;
-    animation: pulse 2s infinite;
-    flex-shrink: 0;
-}
-@keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50%       { opacity: 0.4; }
-}
-
-/* ---- Tile grid cards ---- */
-.tile-card {
-    background: #ffffff;
-    border: 1px solid #e2e8f0;
-    border-radius: 8px;
-    padding: 8px;
-    text-align: center;
-    transition: box-shadow 0.2s;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-}
-.tile-label-green    { color: #15803d; font-size: 11px; font-weight: 600; }
-.tile-label-nongreen { color: #475569; font-size: 11px; font-weight: 600; }
-.tile-conf           { color: #94a3b8; font-size: 10px; }
-
-/* ---- Tab styling ---- */
-.stTabs [data-baseweb="tab-list"] {
-    gap: 4px;
-    background: #f8fafc;
-    padding: 4px;
-    border-radius: 10px;
-    border: 1px solid #e2e8f0;
-}
-.stTabs [data-baseweb="tab"] {
-    border-radius: 7px;
-    font-size: 13px;
-    font-weight: 500;
-    padding: 6px 18px;
-    color: #64748b;
-}
-.stTabs [aria-selected="true"] {
-    background: #ffffff !important;
-    color: #0f172a !important;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
-}
-
-/* ---- About cards ---- */
-.about-card {
-    background: #f8fafc;
-    border: 1px solid #e2e8f0;
-    border-radius: 10px;
-    padding: 20px 24px;
-    margin-bottom: 14px;
-}
-.about-card h4 {
-    font-size: 13px;
-    font-weight: 700;
-    color: #0f172a;
-    margin: 0 0 10px 0;
-    letter-spacing: 0.2px;
-}
-.about-card p, .about-card li {
-    font-size: 13px;
-    color: #475569;
-    line-height: 1.65;
-}
-
-/* ---- Dataframe overrides ---- */
-.stDataFrame { border-radius: 10px; overflow: hidden; }
-
-/* ==========================================================================
-   PREMIUM DARK-THEME UPGRADES
-   ========================================================================== */
-
-/* 1. Hide Streamlit chrome (menu, header bar, footer) -------------------- */
+/* Hide default streamlit header padding & chrome */
 #MainMenu        { visibility: hidden; display: none; }
 header           { visibility: hidden; height: 0 !important; }
 footer           { visibility: hidden; display: none; }
 .block-container {
-    padding-top: 0.6rem !important;
+    padding-top: 0.8rem !important;
     padding-bottom: 2rem !important;
     max-width: 100% !important;
 }
 
-/* 2. Premium metric cards ------------------------------------------------ */
-[data-testid="stMetric"] {
-    background-color: #1E1E2E !important;
-    border: 1px solid #333 !important;
-    border-radius: 12px !important;
-    padding: 15px !important;
-    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-    cursor: default;
+/* ---- Top banner (Matte Slate Card) ---- */
+.top-banner {
+    background: #0d1e26;
+    border-radius: 8px;
+    padding: 24px 30px;
+    margin-bottom: 22px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    position: relative;
+    overflow: hidden;
 }
-[data-testid="stMetric"]:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.15) !important;
-    border-color: #4CAF50 !important;
+.banner-badge {
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: #8fae9b;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    padding: 4px 12px;
+    border-radius: 4px;
+    margin-bottom: 12px;
+    text-transform: uppercase;
 }
-/* Label text */
-[data-testid="stMetric"] label,
-[data-testid="stMetricLabel"] {
-    color: #A0A0B0 !important;
-    font-size: 11px !important;
-    font-weight: 500 !important;
-    letter-spacing: 0.6px !important;
-    text-transform: uppercase !important;
+.banner-title {
+    font-size: 26px;
+    font-weight: 600;
+    color: #f8fafc;
+    margin: 4px 0 8px 0;
+    line-height: 1.25;
+    letter-spacing: -0.4px;
 }
-/* Value text */
-[data-testid="stMetricValue"] {
-    color: #F0F0F8 !important;
-    font-size: 24px !important;
-    font-weight: 700 !important;
+.banner-subtitle {
+    font-size: 13.5px;
+    color: #94a3b8;
+    font-weight: 400;
+    max-width: 680px;
+    line-height: 1.6;
 }
-/* Delta text */
-[data-testid="stMetricDelta"] {
-    color: #4CAF50 !important;
-    font-size: 12px !important;
+.banner-meta {
+    margin-top: 16px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+.banner-pill {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 4px;
+    padding: 4px 10px;
+    font-size: 11px;
+    color: #cbd5e1;
+    font-weight: 450;
 }
 
-/* 3. Sidebar refinement -------------------------------------------------- */
-[data-testid="stSidebar"] {
-    background-color: #12121E !important;
-    border-right: 1px solid #2a2a3e !important;
+/* ---- Section headers ---- */
+.section-header {
+    font-size: 12px;
+    font-weight: 600;
+    color: #8fae9b;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding-bottom: 6px;
+    margin-bottom: 14px;
+    margin-top: 8px;
 }
-[data-testid="stSidebar"] .sidebar-section-title {
-    color: #6b7a99 !important;
+
+/* ---- Map container ---- */
+.map-container {
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* ---- Sidebar refinement ---- */
+[data-testid="stSidebar"] {
+    background-color: #071217 !important;
+    border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+.sidebar-section {
+    background: #0d1b22;
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 6px;
+    padding: 12px 14px;
+    margin-bottom: 12px;
+}
+.sidebar-section-title {
+    font-size: 10.5px;
+    font-weight: 600;
+    color: #64748b;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
 }
 [data-testid="stSidebar"] p,
 [data-testid="stSidebar"] label,
 [data-testid="stSidebar"] .stCaption {
-    color: #9ba3bf !important;
-}
-/* Toggles in sidebar */
-[data-testid="stSidebar"] [data-testid="stToggle"] label {
-    color: #c8cee0 !important;
-    font-size: 13px !important;
-}
-/* Slider in sidebar */
-[data-testid="stSidebar"] [data-testid="stSlider"] label {
-    color: #c8cee0 !important;
-}
-/* Expander header in sidebar */
-[data-testid="stSidebar"] .streamlit-expanderHeader {
-    color: #c8cee0 !important;
-    font-size: 13px !important;
-    font-weight: 500 !important;
-}
-[data-testid="stSidebar"] .streamlit-expanderContent {
-    background-color: #1a1a2e !important;
-    border: 1px solid #2a2a3e !important;
-    border-radius: 0 0 8px 8px !important;
+    color: #8ca3af !important;
 }
 
-/* 4. Custom header accent dot -------------------------------------------- */
+.status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    padding: 5px 12px;
+    font-size: 11px;
+    font-weight: 500;
+    color: #cbd5e1;
+    margin-bottom: 14px;
+}
+.status-dot {
+    width: 6px; height: 6px;
+    background: #8fae9b;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+/* ---- Sidebar KPI cards (Matte Vertical Stack) ---- */
+.sidebar-kpi-card {
+    background: #0d1b22;
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 6px;
+    padding: 12px 14px;
+    margin-bottom: 8px;
+    box-shadow: none;
+    transition: border-color 0.2s ease;
+}
+.sidebar-kpi-card:hover {
+    border-color: rgba(255, 255, 255, 0.16);
+}
+.sidebar-kpi-label {
+    font-size: 9.5px;
+    font-weight: 600;
+    color: #64748b;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    margin-bottom: 3px;
+}
+.sidebar-kpi-value {
+    font-size: 21px;
+    font-weight: 600;
+    line-height: 1.1;
+    margin-bottom: 2px;
+}
+.sidebar-kpi-sub {
+    font-size: 10.5px;
+    color: #8ca3af;
+    margin-bottom: 5px;
+}
+.sidebar-kpi-badge {
+    display: inline-block;
+    font-size: 9.5px;
+    font-weight: 500;
+    padding: 2px 7px;
+    border-radius: 3px;
+    letter-spacing: 0.3px;
+}
+
+/* ---- Tile grid cards ---- */
+.tile-card {
+    background: #0d1b22;
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 6px;
+    padding: 8px;
+    text-align: center;
+    box-shadow: none;
+}
+.tile-label-green    { color: #8fae9b; font-size: 11px; font-weight: 500; }
+.tile-label-nongreen { color: #64748b; font-size: 11px; font-weight: 500; }
+.tile-conf           { color: #64748b; font-size: 10px; }
+
+/* ---- Tab styling ---- */
+.stTabs [data-baseweb="tab-list"] {
+    gap: 4px;
+    background: #071217;
+    padding: 4px;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.07);
+}
+.stTabs [data-baseweb="tab"] {
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 450;
+    padding: 6px 18px;
+    color: #64748b;
+}
+.stTabs [aria-selected="true"] {
+    background: #0d1e26 !important;
+    color: #f8fafc !important;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: none !important;
+}
+
+/* ---- About cards ---- */
+.about-card {
+    background: #0d1b22;
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 6px;
+    padding: 18px 22px;
+    margin-bottom: 12px;
+}
+.about-card h4 {
+    font-size: 13px;
+    font-weight: 600;
+    color: #f8fafc;
+    margin: 0 0 8px 0;
+    letter-spacing: 0.2px;
+}
+.about-card p, .about-card li {
+    font-size: 12.5px;
+    color: #94a3b8;
+    line-height: 1.6;
+}
+
+/* ---- Header wrap ---- */
 .ci-header-wrap {
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: 12px;
     margin-bottom: 4px;
 }
 .ci-accent-dot {
-    width: 12px;
-    height: 12px;
+    width: 8px;
+    height: 8px;
     border-radius: 50%;
-    background: #4CAF50;
-    box-shadow: 0 0 10px rgba(76, 175, 80, 0.6);
+    background: #8fae9b;
+    box-shadow: none;
     flex-shrink: 0;
 }
 .ci-header-title {
-    font-size: 26px;
-    font-weight: 700;
-    color: #F0F0F8;
-    letter-spacing: -0.4px;
-    line-height: 1.2;
+    font-size: 24px;
+    font-weight: 600;
+    color: #f8fafc;
+    letter-spacing: -0.3px;
     margin: 0;
 }
 .ci-header-subtitle {
     font-size: 13px;
-    color: #A0A0B0;
+    color: #94a3b8;
     font-weight: 400;
-    margin: 0 0 0 26px;
+    margin: 0 0 0 20px;
     line-height: 1.5;
 }
 
-/* General app background tint to complement dark sidebar */
-.main .block-container {
-    background-color: #F5F7FA;
-}
-
-/* ---- Heatmap legend (sidebar) ----------------------------------------- */
+/* ---- Heatmap legend (sidebar) ---- */
 .heatmap-legend {
-    background: #1a1a2e;
-    border: 1px solid #2a2a3e;
-    border-radius: 10px;
+    background: #0d1b22;
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 6px;
     padding: 12px 14px;
     margin: 8px 0 14px 0;
 }
 .heatmap-legend-title {
     font-size: 10px;
-    font-weight: 700;
-    color: #6b7a99;
-    letter-spacing: 1px;
+    font-weight: 600;
+    color: #64748b;
+    letter-spacing: 0.8px;
     text-transform: uppercase;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
 }
 .heatmap-legend-row {
     display: flex;
@@ -446,64 +333,41 @@ footer           { visibility: hidden; display: none; }
 }
 .heatmap-legend-row:last-child { margin-bottom: 0; }
 .heatmap-swatch {
-    width: 16px;
-    height: 16px;
-    border-radius: 4px;
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
     flex-shrink: 0;
     margin-top: 2px;
 }
 .heatmap-legend-label {
-    font-size: 12px;
-    font-weight: 600;
-    color: #dde3f0;
+    font-size: 11.5px;
+    font-weight: 500;
+    color: #e2e8f0;
     line-height: 1.3;
 }
 .heatmap-legend-desc {
-    font-size: 10.5px;
-    color: #7a8499;
+    font-size: 10px;
+    color: #64748b;
     line-height: 1.4;
 }
 
-/* ---- Sidebar KPI cards (dark theme, vertical stack) -------------------- */
-.sidebar-kpi-card {
-    background: #1E1E2E;
-    border: 1px solid #2a2a3e;
-    border-radius: 10px;
-    padding: 12px 14px;
-    margin-bottom: 8px;
-    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+/* Streamlit Buttons & Dataframes */
+.stButton > button, .stDownloadButton > button {
+    background: rgba(255, 255, 255, 0.06) !important;
+    border: 1px solid rgba(255, 255, 255, 0.18) !important;
+    color: #f8fafc !important;
+    border-radius: 6px !important;
+    font-weight: 500 !important;
+    box-shadow: none !important;
 }
-.sidebar-kpi-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.15);
-    border-color: #4CAF50;
+.stButton > button:hover, .stDownloadButton > button:hover {
+    background: rgba(255, 255, 255, 0.12) !important;
+    border-color: rgba(255, 255, 255, 0.35) !important;
 }
-.sidebar-kpi-label {
-    font-size: 9.5px;
-    font-weight: 700;
-    color: #6b7a99;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    margin-bottom: 4px;
-}
-.sidebar-kpi-value {
-    font-size: 22px;
-    font-weight: 700;
-    line-height: 1.1;
-    margin-bottom: 3px;
-}
-.sidebar-kpi-sub {
-    font-size: 10.5px;
-    color: #8892a4;
-    margin-bottom: 6px;
-}
-.sidebar-kpi-badge {
-    display: inline-block;
-    font-size: 9.5px;
-    font-weight: 600;
-    padding: 2px 8px;
-    border-radius: 10px;
-    letter-spacing: 0.3px;
+.stDataFrame {
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 6px;
+    overflow: hidden;
 }
 </style>
 """
@@ -571,9 +435,10 @@ def load_preview(png_path, size=(180, 180)):
 def ndvi_color(val):
     v = max(-1.0, min(1.0, float(val) if val else 0.0))
     t = (v + 1.0) / 2.0
-    r = int(255 * (1 - t))
-    g = int(255 * t)
-    return f"#{r:02x}{g:02x}00"
+    r = int(140 * (1 - t) + 40)
+    g = int(120 * t + 40)
+    b = 55
+    return f"#{r:02x}{g:02x}{b:02x}"
 
 
 def records_to_csv_bytes(records):
@@ -626,40 +491,40 @@ def build_map(records, show_ndvi=False, show_preds=True, min_conf=0.0):
         bounds = [[bottom, left], [top, right]]
         is_green = label == "green"
 
-        # Styled popup
+        # Styled popup (Matte Dark)
         correct_badge = (
-            '<span style="background:#dcfce7;color:#15803d;padding:2px 7px;'
-            'border-radius:4px;font-size:11px;font-weight:600;">Correct</span>'
+            '<span style="background:rgba(74,124,89,0.25);color:#8fae9b;padding:2px 7px;'
+            'border-radius:3px;font-size:11px;font-weight:500;">Correct</span>'
             if rec.get("correct") == "True" else
-            '<span style="background:#fee2e2;color:#b91c1c;padding:2px 7px;'
-            'border-radius:4px;font-size:11px;font-weight:600;">Mismatch</span>'
+            '<span style="background:rgba(194,125,125,0.2);color:#c27d7d;padding:2px 7px;'
+            'border-radius:3px;font-size:11px;font-weight:500;">Mismatch</span>'
         )
-        label_color = "#15803d" if is_green else "#475569"
+        label_color = "#8fae9b" if is_green else "#8ca3af"
         popup_html = f"""
-        <div style="font-family:Inter,sans-serif;min-width:200px;padding:4px">
-          <div style="font-size:11px;color:#94a3b8;margin-bottom:4px;letter-spacing:0.5px">
+        <div style="font-family:Inter,sans-serif;min-width:200px;padding:6px;background:#0d1b22;color:#e2e8f0;border-radius:6px;border:1px solid rgba(255,255,255,0.08)">
+          <div style="font-size:10px;color:#64748b;margin-bottom:3px;letter-spacing:0.8px;text-transform:uppercase">
             TILE ID
           </div>
-          <div style="font-size:13px;font-weight:700;color:#0f172a;margin-bottom:10px">
+          <div style="font-size:13px;font-weight:600;color:#f8fafc;margin-bottom:8px">
             {rec['tile_id']}
           </div>
           <table style="width:100%;border-collapse:collapse;font-size:12px">
             <tr>
-              <td style="color:#64748b;padding:3px 0">Classification</td>
-              <td style="font-weight:600;color:{label_color};text-align:right">
+              <td style="color:#94a3b8;padding:3px 0">Classification</td>
+              <td style="font-weight:500;color:{label_color};text-align:right">
                 {label.replace('_',' ').title()}
               </td>
             </tr>
             <tr>
-              <td style="color:#64748b;padding:3px 0">Green Probability</td>
-              <td style="font-weight:600;color:#0f172a;text-align:right">{conf*100:.1f}%</td>
+              <td style="color:#94a3b8;padding:3px 0">Green Probability</td>
+              <td style="font-weight:500;color:#f8fafc;text-align:right">{conf*100:.1f}%</td>
             </tr>
             <tr>
-              <td style="color:#64748b;padding:3px 0">Mean NDVI</td>
-              <td style="font-weight:600;color:#0f172a;text-align:right">{ndvi:.3f}</td>
+              <td style="color:#94a3b8;padding:3px 0">Mean NDVI</td>
+              <td style="font-weight:500;color:#f8fafc;text-align:right">{ndvi:.3f}</td>
             </tr>
             <tr>
-              <td style="color:#64748b;padding:3px 0">Validation</td>
+              <td style="color:#94a3b8;padding:3px 0">Validation</td>
               <td style="text-align:right">{correct_badge}</td>
             </tr>
           </table>
@@ -668,10 +533,10 @@ def build_map(records, show_ndvi=False, show_preds=True, min_conf=0.0):
 
         folium.Rectangle(
             bounds=bounds,
-            color="#2E7D32" if is_green else "#475569",
+            color="#3c6350" if is_green else "#334155",
             weight=1,
             fill=True,
-            fill_color="#4CAF50" if is_green else "#94a3b8",
+            fill_color="#4a7c59" if is_green else "#475569",
             fill_opacity=0.45,
             popup=folium.Popup(popup_html, max_width=240),
             tooltip=folium.Tooltip(
@@ -702,25 +567,25 @@ def build_map(records, show_ndvi=False, show_preds=True, min_conf=0.0):
         collapsed=True,
     ).add_to(m)
 
-    # Refined legend
+    # Refined Matte legend
     legend_html = """
     <div style="position:fixed;bottom:24px;left:24px;z-index:1000;
-                background:rgba(255,255,255,0.96);padding:14px 18px;
-                border-radius:10px;box-shadow:0 2px 16px rgba(0,0,0,0.15);
-                font-family:Inter,sans-serif;border:1px solid #e2e8f0;">
-      <div style="font-size:11px;font-weight:700;color:#475569;letter-spacing:1px;
-                  text-transform:uppercase;margin-bottom:10px;">
+                background:rgba(10,23,29,0.92);padding:14px 18px;
+                border-radius:6px;box-shadow:0 4px 16px rgba(0,0,0,0.3);
+                font-family:Inter,sans-serif;border:1px solid rgba(255,255,255,0.08);">
+      <div style="font-size:10px;font-weight:600;color:#8ca3af;letter-spacing:0.8px;
+                  text-transform:uppercase;margin-bottom:8px;">
         Classification Legend
       </div>
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
-        <div style="width:14px;height:14px;background:#4CAF50;opacity:0.85;
-                    border-radius:3px;border:1px solid #2E7D32;"></div>
-        <span style="font-size:12px;color:#0f172a;font-weight:500;">Green Canopy / Vegetation</span>
+        <div style="width:13px;height:13px;background:#4a7c59;opacity:0.9;
+                    border-radius:2px;border:1px solid #3c6350;"></div>
+        <span style="font-size:12px;color:#e2e8f0;font-weight:450;">Green Canopy / Vegetation</span>
       </div>
       <div style="display:flex;align-items:center;gap:8px;">
-        <div style="width:14px;height:14px;background:#94a3b8;opacity:0.85;
-                    border-radius:3px;border:1px solid #475569;"></div>
-        <span style="font-size:12px;color:#0f172a;font-weight:500;">Impervious / Urban Surface</span>
+        <div style="width:13px;height:13px;background:#475569;opacity:0.9;
+                    border-radius:2px;border:1px solid #334155;"></div>
+        <span style="font-size:12px;color:#e2e8f0;font-weight:450;">Impervious / Urban Surface</span>
       </div>
     </div>
     """
@@ -735,15 +600,15 @@ def build_map(records, show_ndvi=False, show_preds=True, min_conf=0.0):
 def render_kpi_ribbon(n_total, n_green, n_nongreen, coverage_pct, green_area_km2, acc):
     """Renders five KPI cards vertically inside the sidebar."""
     kpis = [
-        ("SAMPLED TILES",      str(n_total),              "256 x 256 px chips",          "Sentinel-2 10m",    "#3b82f6", "#1e3a5f"),
-        ("GREEN CANOPIES",     str(n_green),               "Detected vegetation tiles",    "NDVI > 0.30",       "#22c55e", "#14391f"),
-        ("IMPERVIOUS / URBAN", str(n_nongreen),            "Built-up & bare soil tiles",   "Non-vegetated",     "#64748b", "#1e2535"),
-        ("GREEN COVER RATIO",  f"{coverage_pct:.1f}%",    "of sampled AOI area",          f"~{green_area_km2:.0f} km2", "#f59e0b", "#3a2a0a"),
-        ("MODEL ACCURACY",     f"{acc:.1f}%",              "ResNet-18 best checkpoint",    "Val epoch 9",       "#8b5cf6", "#2a1a45"),
+        ("SAMPLED TILES",      str(n_total),              "256 x 256 px chips",          "Sentinel-2 10m",    "#cbd5e1", "rgba(255,255,255,0.05)"),
+        ("GREEN CANOPIES",     str(n_green),               "Detected vegetation tiles",    "NDVI > 0.30",       "#8fae9b", "rgba(74,124,89,0.2)"),
+        ("IMPERVIOUS / URBAN", str(n_nongreen),            "Built-up & bare soil tiles",   "Non-vegetated",     "#94a3b8", "rgba(255,255,255,0.05)"),
+        ("GREEN COVER RATIO",  f"{coverage_pct:.1f}%",    "of sampled AOI area",          f"~{green_area_km2:.0f} km2", "#b8977e", "rgba(184,151,126,0.15)"),
+        ("MODEL ACCURACY",     f"{acc:.1f}%",              "ResNet-18 best checkpoint",    "Val epoch 9",       "#a3b18a", "rgba(255,255,255,0.05)"),
     ]
     for label, value, sub, badge, accent, badge_bg in kpis:
         st.markdown(f"""
-        <div class="sidebar-kpi-card" style="border-left: 3px solid {accent};">
+        <div class="sidebar-kpi-card" style="border-left: 2px solid {accent};">
           <div class="sidebar-kpi-label">{label}</div>
           <div class="sidebar-kpi-value" style="color:{accent};">{value}</div>
           <div class="sidebar-kpi-sub">{sub}</div>
@@ -774,49 +639,48 @@ def render_sidebar(records):
             show_preds = st.toggle("Prediction overlay", value=True)
             show_ndvi  = st.toggle("NDVI vegetation heatmap", value=False)
 
-        # Heatmap legend — shown right below the NDVI toggle
-        # Swatch colours computed from ndvi_color():
-        #   ndvi_color(v): t=(v+1)/2, r=255*(1-t), g=255*t, b=0
-        #   Dense canopy   NDVI ~0.70 -> t=0.85 -> #26d900
-        #   Sparse veg     NDVI ~0.20 -> t=0.60 -> #669900
-        #   Urban surface  NDVI ~-0.3 -> t=0.35 -> #a65900
+        # Heatmap legend — shown right below the NDVI toggle (Matte swatches)
         st.markdown("""
         <div class="heatmap-legend">
           <div class="heatmap-legend-title">NDVI Heatmap Legend</div>
           <div class="heatmap-legend-row">
-            <span class="heatmap-swatch" style="background:#26d900;"></span>
+            <span class="heatmap-swatch" style="background:#4a7c59;"></span>
             <div>
               <div class="heatmap-legend-label">Dense Canopy</div>
               <div class="heatmap-legend-desc">Healthy mature trees, dense parks, thick forest cover</div>
             </div>
           </div>
           <div class="heatmap-legend-row">
-            <span class="heatmap-swatch" style="background:#669900;"></span>
+            <span class="heatmap-swatch" style="background:#8fae9b;"></span>
             <div>
               <div class="heatmap-legend-label">Sparse Vegetation</div>
-              <div class="heatmap-legend-desc">Grasslands, shrubs, low-density planting, dry vegetation</div>
+              <div class="heatmap-legend-desc">Lawns, shrubland, agricultural patches</div>
+            </div>
+          </div>
+          <div class="heatmap-legend-row">
+            <span class="heatmap-swatch" style="background:#64748b;"></span>
+            <div>
+              <div class="heatmap-legend-label">Urban / Impervious</div>
+              <div class="heatmap-legend-desc">Roads, concrete rooftops, bare soil</div>
             </div>
           </div>
         </div>
         """, unsafe_allow_html=True)
 
-        st.markdown("<div style='margin-bottom:14px'></div>", unsafe_allow_html=True)
-
-        # Threshold
+        # Confidence filter
         st.markdown("""
-        <div class="sidebar-section-title">Inference Threshold</div>
+        <div class="sidebar-section-title">Filter by Confidence</div>
         """, unsafe_allow_html=True)
         min_conf = st.slider(
-            "Minimum confidence",
-            min_value=0.0, max_value=1.0,
-            value=0.0, step=0.05,
-            help="Hide tiles where the model confidence is below this threshold. "
-                 "Higher values show only high-certainty predictions.",
+            "Minimum prediction confidence",
+            min_value=0.5,
+            max_value=1.0,
+            value=0.5,
+            step=0.05,
+            format="%.2f",
+            label_visibility="collapsed",
         )
-
         st.markdown("<div style='margin-bottom:14px'></div>", unsafe_allow_html=True)
-
-        # KPI cards — above Model Info
         st.markdown("""
         <div class="sidebar-section-title">Dataset KPIs</div>
         """, unsafe_allow_html=True)
