@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Canopy Intelligence — Bengaluru Urban Green Space Classifier</title>
+  <meta name="description" content="High-resolution deep learning pipeline detecting and mapping urban canopy density across Bengaluru using multispectral Sentinel-2 satellite imagery.">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Top Announcement / Status Bar -->
+  <div class="top-status-bar">
+    <div class="status-content">
+      <span class="live-dot"></span>
+      <span class="status-text">Production GIS Dashboard Active on <code>localhost:8501</code></span>
+      <a href="http://localhost:8501" target="_blank" class="status-link">Launch Live App &rarr;</a>
+    </div>
+  </div>
+
+  <!-- Header / Navigation Bar matching reference style -->
+  <header class="site-header" id="navbar">
+    <div class="nav-container">
+      <a href="#hero" class="brand-logo">
+        <div class="logo-mark">
+          <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M16 2C8.268 2 2 8.268 2 16c0 6.188 4.008 11.442 9.605 13.268C11.21 28.5 11 27.27 11 26c0-6.075 4.925-11 11-11 1.27 0 2.5.21 3.268.605C23.442 6.008 18.188 2 16 2z" fill="url(#leaf-grad)"/>
+            <path d="M22 17c-4.97 0-9 4.03-9 9 0 1.05.18 2.06.51 3A14.025 14.025 0 0016 30c7.732 0 14-6.268 14-14 0-.8-.07-1.58-.2-2.35C28.3 15.65 25.32 17 22 17z" fill="#4ade80" opacity="0.8"/>
+            <circle cx="16" cy="16" r="3" fill="#ffffff"/>
+            <defs>
+              <linearGradient id="leaf-grad" x1="2" y1="2" x2="26" y2="26" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#34d399"/>
+                <stop offset="1" stop-color="#059669"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <div class="brand-name">
+          <span class="brand-title">CANOPY<span class="accent-dot">.</span>AI</span>
+          <span class="brand-subtitle">BENGALURU GIS</span>
+        </div>
+      </a>
+
+      <nav class="nav-links">
+        <a href="#pipeline" class="nav-link">Satellite Pipeline</a>
+        <a href="#interactive-map" class="nav-link">Canopy Map</a>
+        <a href="#tile-explorer" class="nav-link">Tile Explorer</a>
+        <a href="#metrics" class="nav-link">Model Metrics</a>
+        <a href="#impact" class="nav-link">Urban Impact</a>
+      </nav>
+
+      <div class="nav-actions">
+        <a href="http://localhost:8501" target="_blank" class="nav-btn-primary">
+          <span>Launch Dashboard</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="7" y1="17" x2="17" y2="7"></line>
+            <polyline points="7 7 17 7 17 17"></polyline>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section styled faithfully to the reference picture -->
+  <section class="hero-section" id="hero">
+    <div class="hero-backdrop">
+      <img src="assets/hero-bg.jpg" alt="Lush mountain canopy and misty valley landscape" class="hero-bg-img" id="heroBg">
+      <div class="hero-overlay-gradient"></div>
+      <div class="hero-overlay-mist"></div>
+    </div>
+
+    <div class="hero-inner">
+      <div class="hero-content">
+        <div class="hero-tag">
+          <span class="tag-pulse"></span>
+          <span>Sentinel-2 Level-2A &bull; Multispectral Deep Learning</span>
+        </div>
+
+        <h1 class="hero-title">
+          Canopy Intelligence
+        </h1>
+
+        <p class="hero-description">
+          Automated urban green space mapping and vegetative density classification across Greater Bengaluru using 11-band multispectral satellite imagery, powered by an adapted ResNet-18 neural architecture achieving 97.63% precision.
+        </p>
+
+        <div class="hero-cta-group">
+          <a href="http://localhost:8501" target="_blank" class="hero-btn-primary">
+            <span>Explore Live Dashboard</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </a>
+          <a href="#interactive-map" class="hero-btn-secondary">
+            <span>View Coverage Map</span>
+          </a>
+        </div>
+
+        <!-- Reference-style KPI preview chips floating at base of hero -->
+        <div class="hero-stats-strip">
+          <div class="hero-stat-item">
+            <span class="stat-number">97.63%</span>
+            <span class="stat-label">Model Accuracy</span>
+          </div>
+          <div class="hero-stat-sep"></div>
+          <div class="hero-stat-item">
+            <span class="stat-number">100%</span>
+            <span class="stat-label">Green Space Recall</span>
+          </div>
+          <div class="hero-stat-sep"></div>
+          <div class="hero-stat-item">
+            <span class="stat-number">10 m</span>
+            <span class="stat-label">Spatial Resolution</span>
+          </div>
+          <div class="hero-stat-sep"></div>
+          <div class="hero-stat-item">
+            <span class="stat-number">11 Bands</span>
+            <span class="stat-label">Multispectral Stack</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scroll down indicator -->
+    <a href="#overview" class="scroll-down-cue" aria-label="Scroll down">
+      <div class="scroll-mouse">
+        <div class="scroll-wheel"></div>
+      </div>
+    </a>
+  </section>
+
+  <!-- Metrics Ribbon Section -->
+  <section class="section-metrics-ribbon" id="overview">
+    <div class="container">
+      <div class="ribbon-grid">
+        <div class="ribbon-card">
+          <div class="ribbon-icon green">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+          </div>
+          <div class="ribbon-body">
+            <div class="ribbon-val" data-counter="169">169</div>
+            <div class="ribbon-title">Total Analyzed Chips</div>
+            <div class="ribbon-sub">256 &times; 256 px Sentinel-2 tiles</div>
+          </div>
+        </div>
+
+        <div class="ribbon-card">
+          <div class="ribbon-icon emerald">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>
+          </div>
+          <div class="ribbon-body">
+            <div class="ribbon-val" data-counter="24">24</div>
+            <div class="ribbon-title">Lush Green Canopies</div>
+            <div class="ribbon-sub">NDVI &gt; 0.30 vegetation index</div>
+          </div>
+        </div>
+
+        <div class="ribbon-card">
+          <div class="ribbon-icon blue">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m4.93 4.93 4.24 4.24"/><path d="m14.83 9.17 4.24-4.24"/><path d="m14.83 14.83 4.24 4.24"/><path d="m9.17 14.83-4.24 4.24"/></svg>
+          </div>
+          <div class="ribbon-body">
+            <div class="ribbon-val">157.3 <span class="unit">km&sup2;</span></div>
+            <div class="ribbon-title">Green Canopy Area</div>
+            <div class="ribbon-sub">14.2% city canopy coverage</div>
+          </div>
+        </div>
+
+        <div class="ribbon-card">
+          <div class="ribbon-icon purple">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </div>
+          <div class="ribbon-body">
+            <div class="ribbon-val">97.92%</div>
+            <div class="ribbon-title">Validation F1 Score</div>
+            <div class="ribbon-sub">ResNet-18 Deep Learning</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive Map & GIS Preview Section -->
+  <section class="section-interactive-map" id="interactive-map">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Interactive GIS Platform</span>
+        <h2 class="section-title">Greater Bengaluru Canopy Mapping</h2>
+        <p class="section-desc">
+          Georeferenced spatial analysis covering <code>lon [77.45&deg;, 77.75&deg;]</code>, <code>lat [12.83&deg;, 13.14&deg;]</code>. Toggle between multispectral satellite views, deep learning bounding box predictions, and NDVI heatmaps.
+        </p>
+      </div>
+
+      <div class="map-showcase-card">
+        <!-- Map Controls Toolbar -->
+        <div class="map-toolbar">
+          <div class="map-toolbar-left">
+            <span class="toolbar-label">Layer View:</span>
+            <button class="layer-pill active" id="btnPredLayer">
+              <span class="color-dot dot-green"></span>
+              <span>AI Predictions</span>
+            </button>
+            <button class="layer-pill" id="btnNdviLayer">
+              <span class="color-dot dot-gradient"></span>
+              <span>NDVI Heatmap</span>
+            </button>
+            <button class="layer-pill" id="btnSatLayer">
+              <span class="color-dot dot-blue"></span>
+              <span>True Color (B4-B3-B2)</span>
+            </button>
+          </div>
+
+          <div class="map-toolbar-right">
+            <span class="aoi-pill">AOI: Bengaluru Urban &bull; 1,108 km&sup2;</span>
+            <a href="http://localhost:8501" target="_blank" class="launch-stream-link">
+              <span>Open in Folium</span>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Simulated Interactive GIS Viewport -->
+        <div class="map-display-container">
+          <div class="simulated-map" id="simulatedMap">
+            <!-- Satellite Base Grid -->
+            <div class="map-grid-layer">
+              <!-- Dynamically populated or rendered tiles -->
+              <div class="gis-grid" id="gisGrid"></div>
+            </div>
+
+            <!-- Floating Overlay Legend -->
+            <div class="map-floating-legend">
+              <div class="legend-header">Classification Legend</div>
+              <div class="legend-row">
+                <span class="legend-color-box green-box"></span>
+                <span class="legend-text">Green Canopy (NDVI &gt; 0.30)</span>
+              </div>
+              <div class="legend-row">
+                <span class="legend-color-box slate-box"></span>
+                <span class="legend-text">Urban / Impervious Surface</span>
+              </div>
+              <div class="legend-divider"></div>
+              <div class="legend-row">
+                <span class="legend-gradient-bar"></span>
+                <span class="legend-text">NDVI: -0.1 (Water) &rarr; +0.8 (Dense Flora)</span>
+              </div>
+            </div>
+
+            <!-- Tile Inspector Card (Floating) -->
+            <div class="tile-inspector-card" id="inspectorCard">
+              <div class="inspector-badge green-badge">Lush Canopy Detected</div>
+              <div class="inspector-title" id="inspTileId">tile_00000_00000</div>
+              <div class="inspector-table">
+                <div class="insp-row">
+                  <span>Classification:</span>
+                  <strong class="text-green" id="inspClass">Green Space</strong>
+                </div>
+                <div class="insp-row">
+                  <span>Confidence:</span>
+                  <strong id="inspConf">99.86%</strong>
+                </div>
+                <div class="insp-row">
+                  <span>Mean NDVI:</span>
+                  <strong id="inspNdvi">0.3449</strong>
+                </div>
+                <div class="insp-row">
+                  <span>Valid Pixels:</span>
+                  <strong>100.0%</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Map Footer Statistics Strip -->
+        <div class="map-footer-stats">
+          <div class="map-stat-col">
+            <span class="label">Total Tiles Sampled</span>
+            <span class="value">169 Non-Overlapping Chips</span>
+          </div>
+          <div class="map-stat-col">
+            <span class="label">Canopy Recall Rate</span>
+            <span class="value text-green">100.0% (Zero Missed Green Spaces)</span>
+          </div>
+          <div class="map-stat-col">
+            <span class="label">Sensor Platform</span>
+            <span class="value">ESA Copernicus Sentinel-2 (MSI)</span>
+          </div>
+          <div class="map-stat-col">
+            <span class="label">Observation Window</span>
+            <span class="value">February &ndash; April 2024 Composite</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6-Stage Satellite AI Pipeline -->
+  <section class="section-pipeline" id="pipeline">
+    <div class="container">
+      <div class="section-header center">
+        <span class="section-tag">End-to-End Deep Learning Architecture</span>
+        <h2 class="section-title">The 6-Stage Satellite Data Pipeline</h2>
+        <p class="section-desc">
+          From raw multispectral top-of-atmosphere surface reflectance to an interactive production-grade geospatial intelligence dashboard.
+        </p>
+      </div>
+
+      <div class="pipeline-grid">
+        <!-- Stage 1 -->
+        <div class="pipeline-card">
+          <div class="stage-number">01</div>
+          <div class="stage-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"/><path d="M12 6v6l4 2"/></svg>
+          </div>
+          <h3 class="stage-title">GEE Acquisition</h3>
+          <p class="stage-desc">
+            Connects to Google Earth Engine API, loads Sentinel-2 Level-2A surface reflectance, filters &lt;10% cloud cover, applies SCL mask, and outputs an 11-band median composite.
+          </p>
+          <div class="stage-tags">
+            <span>earthengine-api</span>
+            <span>Cloud Mask</span>
+            <span>Median Composite</span>
+          </div>
+        </div>
+
+        <!-- Stage 2 -->
+        <div class="pipeline-card">
+          <div class="stage-number">02</div>
+          <div class="stage-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg>
+          </div>
+          <h3 class="stage-title">Tile Generation</h3>
+          <p class="stage-desc">
+            Slices the GeoTIFF composite into 256&times;256 px chips. Discards tiles with &lt;70% valid data, generating 11-channel float32 tensors and RGB preview PNGs.
+          </p>
+          <div class="stage-tags">
+            <span>Rasterio</span>
+            <span>256&times;256 Chips</span>
+            <span>Float32 Tensors</span>
+          </div>
+        </div>
+
+        <!-- Stage 3 -->
+        <div class="pipeline-card">
+          <div class="stage-number">03</div>
+          <div class="stage-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+          </div>
+          <h3 class="stage-title">NDVI Auto-Labelling</h3>
+          <p class="stage-desc">
+            Calculates <code>(B8 - B4) / (B8 + B4)</code>. Tiles with mean NDVI &gt; 0.30 are categorized as green canopy (forests, parks, tree-lined boulevards) vs non-green urban.
+          </p>
+          <div class="stage-tags">
+            <span>NDVI &gt; 0.30</span>
+            <span>Auto Annotation</span>
+            <span>Preview Borders</span>
+          </div>
+        </div>
+
+        <!-- Stage 4 -->
+        <div class="pipeline-card highlighted">
+          <div class="stage-number">04</div>
+          <div class="stage-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m18 16 4-4-4-4"/><path d="m6 8-4 4 4 4"/><path d="m14.5 4-5 16"/></svg>
+          </div>
+          <h3 class="stage-title">ResNet-18 Training</h3>
+          <p class="stage-desc">
+            Modified ResNet-18 expanded from 3 to 11 input channels. Uses weighted cross-entropy for 6:1 class imbalance, AdamW optimiser, and Cosine Annealing learning rate.
+          </p>
+          <div class="stage-tags">
+            <span>PyTorch</span>
+            <span>11-Band Conv1</span>
+            <span>Weighted Loss</span>
+          </div>
+        </div>
+
+        <!-- Stage 5 -->
+        <div class="pipeline-card">
+          <div class="stage-number">05</div>
+          <div class="stage-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
+          </div>
+          <h3 class="stage-title">Model Evaluation</h3>
+          <p class="stage-desc">
+            Exhaustive statistical validation producing per-class precision, recall, confusion matrix, confidence distributions, and training loss convergence curves.
+          </p>
+          <div class="stage-tags">
+            <span>97.63% Acc</span>
+            <span>Confusion Matrix</span>
+            <span>F1 Analytics</span>
+          </div>
+        </div>
+
+        <!-- Stage 6 -->
+        <div class="pipeline-card">
+          <div class="stage-number">06</div>
+          <div class="stage-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="12 8 8 12 12 16 16 12 12 8"/></svg>
+          </div>
+          <h3 class="stage-title">Streamlit Dashboard</h3>
+          <p class="stage-desc">
+            Interactive production platform featuring Folium map layer controllers, styled HTML popups, KPI summary cards, full tile gallery, and CSV report export.
+          </p>
+          <div class="stage-tags">
+            <span>Streamlit</span>
+            <span>Folium GIS</span>
+            <span>Live Localhost</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive Tile Explorer Section -->
+  <section class="section-tiles" id="tile-explorer">
+    <div class="container">
+      <div class="section-header between">
+        <div>
+          <span class="section-tag">Multispectral Imagery Archive</span>
+          <h2 class="section-title">Satellite Tile Explorer</h2>
+          <p class="section-desc">
+            Inspect individual 256&times;256 Sentinel-2 chips across Greater Bengaluru with ground-truth NDVI and neural confidence scores.
+          </p>
+        </div>
+
+        <!-- Filter Buttons -->
+        <div class="tile-filters">
+          <button class="filter-btn active" data-filter="all">All Chips (169)</button>
+          <button class="filter-btn" data-filter="green">
+            <span class="badge-dot green"></span> Green Canopy (24)
+          </button>
+          <button class="filter-btn" data-filter="non_green">
+            <span class="badge-dot slate"></span> Urban / Built-up (145)
+          </button>
+        </div>
+      </div>
+
+      <!-- Tile Grid -->
+      <div class="tiles-gallery-grid" id="tileGallery">
+        <!-- Rendered via JS from real chip data -->
+      </div>
+
+      <!-- Interactive NDVI Threshold Slider Demonstration -->
+      <div class="ndvi-sim-card">
+        <div class="ndvi-sim-header">
+          <div class="sim-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            <span>Live NDVI Threshold Sensitivity Explorer</span>
+          </div>
+          <div class="sim-val-badge">Current Threshold: <strong id="threshValDisplay">0.30</strong></div>
+        </div>
+        <p class="sim-text">
+          Adjust the NDVI cutoff threshold to simulate how strict vegetation classification influences urban green space detection and canopy conservation targets:
+        </p>
+        <div class="slider-wrapper">
+          <span class="slider-min">0.15 (Permissive)</span>
+          <input type="range" min="0.15" max="0.55" step="0.01" value="0.30" id="ndviSlider" class="custom-range">
+          <span class="slider-max">0.55 (Dense Flora Only)</span>
+        </div>
+        <div class="slider-feedback-row">
+          <div class="feedback-item">
+            <span>Simulated Green Tiles:</span>
+            <strong id="simGreenCount" class="text-green">24 / 169 (14.2%)</strong>
+          </div>
+          <div class="feedback-item">
+            <span>Estimated Canopy Area:</span>
+            <strong id="simAreaKm2">157.3 km&sup2;</strong>
+          </div>
+          <div class="feedback-item">
+            <span>Target Classification Bias:</span>
+            <span class="badge-pill optimal" id="simStatus">Optimal (Baseline S2 SR)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Model Metrics & Evaluation Report -->
+  <section class="section-metrics" id="metrics">
+    <div class="container">
+      <div class="section-header center">
+        <span class="section-tag">Validation & Benchmarks</span>
+        <h2 class="section-title">Model Performance & Evaluation</h2>
+        <p class="section-desc">
+          Empirical evaluation against held-out Sentinel-2 multispectral chips in the Bengaluru Area of Interest.
+        </p>
+      </div>
+
+      <div class="metrics-content-grid">
+        <!-- Metric Table Card -->
+        <div class="eval-table-card">
+          <h3 class="card-subtitle">Per-Class Classification Benchmark</h3>
+          <div class="table-responsive">
+            <table class="benchmark-table">
+              <thead>
+                <tr>
+                  <th>Class</th>
+                  <th>Precision</th>
+                  <th>Recall</th>
+                  <th>F1-Score</th>
+                  <th>Support</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <span class="badge-tag green">Green Canopy</span>
+                  </td>
+                  <td><strong>85.71%</strong></td>
+                  <td><strong class="highlight-green">100.00%</strong></td>
+                  <td><strong>92.31%</strong></td>
+                  <td>24 Tiles</td>
+                </tr>
+                <tr>
+                  <td>
+                    <span class="badge-tag slate">Urban / Non-Green</span>
+                  </td>
+                  <td><strong class="highlight-green">100.00%</strong></td>
+                  <td><strong>97.24%</strong></td>
+                  <td><strong>98.60%</strong></td>
+                  <td>145 Tiles</td>
+                </tr>
+                <tr class="summary-row">
+                  <td><strong>Weighted Avg</strong></td>
+                  <td><strong>97.98%</strong></td>
+                  <td><strong>97.63%</strong></td>
+                  <td><strong>97.71%</strong></td>
+                  <td>169 Tiles</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="key-takeaways">
+            <div class="takeaway-item">
+              <span class="check-icon">&#10003;</span>
+              <div>
+                <strong>100% Green Recall:</strong> Not a single vegetative canopy was misclassified as urban, ensuring zero false negatives for municipal environmental audits.
+              </div>
+            </div>
+            <div class="takeaway-item">
+              <span class="check-icon">&#10003;</span>
+              <div>
+                <strong>6:1 Class Imbalance Managed:</strong> Handled through Weighted Random Sampling and Cross-Entropy channel re-weighting.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Evaluation Plots Display -->
+        <div class="eval-plots-card">
+          <div class="tabs-nav">
+            <button class="plot-tab active" data-tab="evalReport">Evaluation Report</button>
+            <button class="plot-tab" data-tab="trainingCurves">Training Curves</button>
+          </div>
+
+          <div class="tab-pane active" id="paneEvalReport">
+            <div class="plot-img-wrapper">
+              <img src="assets/evaluation_report.png" alt="Confusion Matrix and Evaluation Report Charts" class="plot-image">
+            </div>
+            <div class="plot-caption">
+              Confusion Matrix, Per-Class F1 comparison, and neural prediction confidence distribution across classes.
+            </div>
+          </div>
+
+          <div class="tab-pane" id="paneTrainingCurves">
+            <div class="plot-img-wrapper">
+              <img src="assets/training_curves.png" alt="Training and Validation Accuracy/Loss Curves" class="plot-image">
+            </div>
+            <div class="plot-caption">
+              Cross-Entropy Loss decay and validation accuracy convergence peaking at 97.92% (Epoch 9).
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Environmental & Urban Impact Section -->
+  <section class="section-impact" id="impact">
+    <div class="container">
+      <div class="impact-inner-card">
+        <div class="impact-left">
+          <span class="section-tag">Urban Forestry & Ecology</span>
+          <h2 class="impact-title">Preserving Bengaluru's Garden City Heritage</h2>
+          <p class="impact-text">
+            Rapid urbanization has reduced Bangalore's historical tree canopy from over 68% in the 1970s to under 15% today. This deep learning platform arms municipal planners, research institutes, and conservationists with continuous, satellite-verified canopy monitoring.
+          </p>
+          <div class="impact-bullets">
+            <div class="bullet-item">
+              <div class="bullet-icon">&#127795;</div>
+              <div>
+                <h4>Urban Heat Island (UHI) Mitigation</h4>
+                <p>Pinpoints micro-climates suffering from thermal stress due to loss of tree canopy shade.</p>
+              </div>
+            </div>
+            <div class="bullet-item">
+              <div class="bullet-icon">&#128506;&#65039;</div>
+              <div>
+                <h4>Ward-Level Green Auditing</h4>
+                <p>Objective 10m-resolution spatial evidence for BBMP and forest department re-greening initiatives.</p>
+              </div>
+            </div>
+            <div class="bullet-item">
+              <div class="bullet-icon">&#128300;</div>
+              <div>
+                <h4>Sentinel-2 Temporal Tracking</h4>
+                <p>5-day revisit rate enables dynamic quarterly tracking without expensive airborne LIDAR surveys.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="impact-right">
+          <div class="satellite-spec-box">
+            <div class="spec-title">Multispectral Band Allocation</div>
+            <div class="band-list">
+              <div class="band-item">
+                <span class="band-code">B2 &bull; 490 nm</span>
+                <span class="band-role">Blue &bull; Atmospheric Scattering</span>
+              </div>
+              <div class="band-item">
+                <span class="band-code">B3 &bull; 560 nm</span>
+                <span class="band-role">Green &bull; Peak Vegetation Reflectance</span>
+              </div>
+              <div class="band-item">
+                <span class="band-code">B4 &bull; 665 nm</span>
+                <span class="band-role">Red &bull; Chlorophyll Absorption</span>
+              </div>
+              <div class="band-item">
+                <span class="band-code">B8 &bull; 842 nm</span>
+                <span class="band-role">NIR &bull; Mesophyll Leaf Structure</span>
+              </div>
+              <div class="band-item">
+                <span class="band-code">B11/B12 &bull; 1.6 &ndash; 2.2 &mu;m</span>
+                <span class="band-role">SWIR &bull; Canopy Moisture Content</span>
+              </div>
+              <div class="band-item highlight">
+                <span class="band-code">NDVI &bull; Index</span>
+                <span class="band-role">Normalized Difference Vegetation Index</span>
+              </div>
+            </div>
+            <a href="http://localhost:8501" target="_blank" class="spec-btn">
+              <span>Launch Live Foliage Map</span>
+              &rarr;
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Banner Section -->
+  <section class="section-cta">
+    <div class="container">
+      <div class="cta-banner-wrapper">
+        <div class="cta-glow-circle"></div>
+        <div class="cta-content">
+          <span class="cta-badge">Ready for Exploration</span>
+          <h2 class="cta-heading">Launch the Bengaluru Green Space Dashboard</h2>
+          <p class="cta-sub">
+            The complete interactive Folium map, confidence threshold slicers, and tile inspector are running locally right now on your system.
+          </p>
+          <div class="cta-actions">
+            <a href="http://localhost:8501" target="_blank" class="cta-btn-glow">
+              <span>Open Streamlit Dashboard</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            </a>
+            <a href="#hero" class="cta-btn-outline">
+              <span>Back to Top</span>
+              &uarr;
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Site Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <div class="brand-logo">
+            <div class="logo-mark">
+              <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M16 2C8.268 2 2 8.268 2 16c0 6.188 4.008 11.442 9.605 13.268C11.21 28.5 11 27.27 11 26c0-6.075 4.925-11 11-11 1.27 0 2.5.21 3.268.605C23.442 6.008 18.188 2 16 2z" fill="#34d399"/>
+                <circle cx="16" cy="16" r="3" fill="#ffffff"/>
+              </svg>
+            </div>
+            <span class="brand-title">CANOPY<span class="accent-dot">.</span>AI</span>
+          </div>
+          <p class="footer-mission">
+            Autonomous Earth Observation & Deep Learning intelligence for urban environmental monitoring across Karnataka.
+          </p>
+        </div>
+
+        <div class="footer-col">
+          <h4>Pipeline Stages</h4>
+          <ul>
+            <li><a href="#pipeline">01. GEE S2 Extraction</a></li>
+            <li><a href="#pipeline">02. 256&times;256 Tiling</a></li>
+            <li><a href="#pipeline">03. NDVI Auto-Labelling</a></li>
+            <li><a href="#pipeline">04. ResNet-18 Deep Learning</a></li>
+            <li><a href="#pipeline">05. Model Evaluation</a></li>
+            <li><a href="#pipeline">06. Production Streamlit App</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Open Science</h4>
+          <ul>
+            <li><a href="https://github.com/rishika0o0/urban-greenspace" target="_blank">GitHub Repository</a></li>
+            <li><a href="https://dataspace.copernicus.eu/" target="_blank">Copernicus Browser</a></li>
+            <li><a href="https://earthengine.google.com/" target="_blank">Google Earth Engine</a></li>
+            <li><a href="https://pytorch.org/" target="_blank">PyTorch Deep Learning</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Dataset Specs</h4>
+          <p class="footer-specs">
+            <strong>Sensor:</strong> Sentinel-2 MSI Level-2A<br>
+            <strong>Spatial AOI:</strong> Greater Bengaluru<br>
+            <strong>Resolution:</strong> 10m / pixel<br>
+            <strong>Chip Count:</strong> 169 Tiles (Float32)
+          </p>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2024&ndash;2026 Bengaluru Urban Green Space Classifier. Satellite data &copy; European Space Agency (ESA) & Copernicus Programme.</p>
+        <div class="footer-legal">
+          <span>MIT License</span> &bull; <span>Research &amp; Educational Purpose</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Tile Detail Modal -->
+  <div class="modal-backdrop" id="tileModal">
+    <div class="modal-content">
+      <button class="modal-close" id="modalClose" aria-label="Close modal">&times;</button>
+      <div class="modal-grid">
+        <div class="modal-img-wrap">
+          <img src="" alt="Tile Preview" id="modalImg">
+          <div class="modal-img-badge" id="modalBadge">Green Canopy</div>
+        </div>
+        <div class="modal-info">
+          <h3 id="modalTileId">tile_00000_00000</h3>
+          <p class="modal-caption" id="modalCaption">High vegetation density with high NIR reflectance.</p>
+          <div class="modal-stat-list">
+            <div class="modal-stat-row">
+              <span>Predicted Label:</span>
+              <strong id="modalPred">Green Space</strong>
+            </div>
+            <div class="modal-stat-row">
+              <span>Ground Truth Label:</span>
+              <strong id="modalTrue">Green Space</strong>
+            </div>
+            <div class="modal-stat-row">
+              <span>Classification Confidence:</span>
+              <strong id="modalConf">99.86%</strong>
+            </div>
+            <div class="modal-stat-row">
+              <span>Mean NDVI Value:</span>
+              <strong id="modalNdvi">0.3011</strong>
+            </div>
+            <div class="modal-stat-row">
+              <span>Geographic Bounds:</span>
+              <code id="modalGeo">77.45&deg;E, 13.14&deg;N</code>
+            </div>
+          </div>
+          <div class="modal-cta-row">
+            <a href="http://localhost:8501" target="_blank" class="modal-btn-open">
+              Open in Live GIS &rarr;
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

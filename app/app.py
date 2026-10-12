@@ -529,12 +529,17 @@ def load_model():
         m.fc    = nn.Linear(m.fc.in_features, num_classes)
         return m
 
-    ckpt  = torch.load(BEST_MODEL, map_location="cpu")
-    model = build()
-    model.load_state_dict(ckpt["model_state_dict"])
-    model.eval()
-    stats = np.load(NORM_STATS, allow_pickle=True).item()
-    return model, stats
+    if os.path.exists(BEST_MODEL) and os.path.exists(NORM_STATS):
+        try:
+            ckpt  = torch.load(BEST_MODEL, map_location="cpu")
+            model = build()
+            model.load_state_dict(ckpt["model_state_dict"])
+            model.eval()
+            stats = np.load(NORM_STATS, allow_pickle=True).item()
+            return model, stats
+        except Exception:
+            return None, None
+    return None, None
 
 
 @st.cache_data
@@ -549,6 +554,15 @@ def load_predictions():
 
 def load_preview(png_path, size=(180, 180)):
     try:
+        norm_path = png_path.replace("\\", os.sep)
+        candidates = [
+            norm_path,
+            os.path.join(ROOT, norm_path),
+            os.path.join(ROOT, "data", "chips", "previews", os.path.basename(norm_path)),
+        ]
+        for p in candidates:
+            if os.path.exists(p):
+                return Image.open(p).convert("RGB").resize(size, Image.LANCZOS)
         return Image.open(png_path).convert("RGB").resize(size, Image.LANCZOS)
     except Exception:
         return Image.new("RGB", size, (40, 40, 40))
