@@ -1,0 +1,38 @@
+# Python
+venv/
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Large data files — keep structure, ignore binary rasters and chips
+data/*.tif
+data/chips/images/*.npy
+data/chips/previews/*.png
+
+# Model weights (large binaries)
+models/*.pth
+models/norm_stats.npy
+
+# Keep the CSV outputs and PNG reports (small, useful for review)
+!models/train_log.csv
+!models/predictions.csv
+!models/evaluation_report.png
+!models/training_curves.png
+
+# Streamlit cache
+.streamlit/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
