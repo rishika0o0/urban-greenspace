@@ -279,7 +279,15 @@ footer           { visibility: hidden; display: none; }
     line-height: 1.6;
 }
 
-/* ---- Header wrap ---- */
+/* ---- Header wrap & Top Bar ---- */
+.ci-header-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 14px;
+    padding: 14px 0 2px 0;
+}
 .ci-header-wrap {
     display: flex;
     align-items: center;
@@ -307,6 +315,50 @@ footer           { visibility: hidden; display: none; }
     font-weight: 400;
     margin: 0 0 0 20px;
     line-height: 1.5;
+}
+
+/* ---- Back to Landing Page Button ---- */
+.back-landing-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #0d1e26;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 6px;
+    padding: 8px 14px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #cbd5e1 !important;
+    text-decoration: none !important;
+    cursor: pointer;
+    transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+    letter-spacing: 0.2px;
+    width: 100%;
+    justify-content: center;
+    margin-bottom: 14px;
+    box-sizing: border-box;
+}
+.back-landing-btn:hover {
+    background: #142a35;
+    border-color: rgba(255, 255, 255, 0.24);
+    color: #f8fafc !important;
+    text-decoration: none !important;
+}
+.back-landing-btn svg {
+    stroke: #8fae9b;
+    transition: transform 0.15s ease;
+    flex-shrink: 0;
+}
+.back-landing-btn:hover svg {
+    transform: translateX(-3px);
+    stroke: #b4cfc0;
+}
+.back-landing-btn-header {
+    width: auto;
+    margin-bottom: 0;
+    padding: 7px 16px;
+    flex-shrink: 0;
+    margin-top: 2px;
 }
 
 /* ---- Heatmap legend (sidebar) ---- */
@@ -623,6 +675,17 @@ def render_kpi_ribbon(n_total, n_green, n_nongreen, coverage_pct, green_area_km2
 
 def render_sidebar(records):
     with st.sidebar:
+        # Back to landing page button
+        st.markdown("""
+        <a href="http://localhost:3000" target="_self" class="back-landing-btn" id="sidebar-back-landing" title="Return to Landing Page">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          <span>&larr; Back to Landing Page</span>
+        </a>
+        """, unsafe_allow_html=True)
+
         # Status pill
         st.markdown("""
         <div class="status-pill">
@@ -853,6 +916,19 @@ def render_about_tab():
             <li>Urban/non-green chips: 145 (85.8%)</li>
           </ul>
         </div>
+        <div class="about-card">
+          <h4>Navigation</h4>
+          <p style="margin-bottom: 10px; font-size: 12.5px; color: #94a3b8;">
+            Return to the high-level project presentation landing page and interactive system overview.
+          </p>
+          <a href="http://localhost:3000" target="_self" class="back-landing-btn" style="width: auto; padding: 7px 16px; margin-bottom: 0;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="19" y1="12" x2="5" y2="12"></line>
+              <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            <span>&larr; Back to Project Landing Page</span>
+          </a>
+        </div>
         """, unsafe_allow_html=True)
 
 
@@ -887,17 +963,26 @@ def main():
     total_area    = n_total * tile_area_km2
     coverage_pct  = green_area / max(total_area, 1) * 100
 
-    # Custom header
+    # Custom header with Back to Landing Page button
     st.markdown("""
-    <div style="margin-bottom: 10px; padding: 18px 0 4px 0;">
-      <div class="ci-header-wrap">
-        <div class="ci-accent-dot"></div>
-        <h1 class="ci-header-title">Bengaluru Canopy Intelligence</h1>
+    <div class="ci-header-bar">
+      <div>
+        <div class="ci-header-wrap">
+          <div class="ci-accent-dot"></div>
+          <h1 class="ci-header-title">Bengaluru Canopy Intelligence</h1>
+        </div>
+        <p class="ci-header-subtitle">
+          High-resolution semantic segmentation benchmarked across
+          Sentinel-2 Level-2A surface reflectance &mdash; Greater Bengaluru AOI.
+        </p>
       </div>
-      <p class="ci-header-subtitle">
-        High-resolution semantic segmentation benchmarked across
-        Sentinel-2 Level-2A surface reflectance &mdash; Greater Bengaluru AOI.
-      </p>
+      <a href="http://localhost:3000" target="_self" class="back-landing-btn back-landing-btn-header" id="header-back-landing" title="Return to Project Landing Page">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+        <span>&larr; Back to Landing Page</span>
+      </a>
     </div>
     """, unsafe_allow_html=True)
 
