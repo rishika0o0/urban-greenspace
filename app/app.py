@@ -38,6 +38,8 @@ MAP_CENTER = [12.9716, 77.5946]
 MAP_ZOOM   = 11
 
 
+import streamlit.components.v1 as components
+
 # ---------------------------------------------------------------------------
 # CSS injection
 # ---------------------------------------------------------------------------
@@ -52,12 +54,46 @@ html, body, [class*="css"], [data-testid="stAppViewContainer"], .main, .main .bl
     color: #94a3b8 !important;
 }
 
-/* Hide default streamlit header padding & chrome */
+/* Hide default streamlit header chrome, but KEEP sidebar controls visible */
 #MainMenu        { visibility: hidden; display: none; }
-header           { visibility: hidden; height: 0 !important; }
 footer           { visibility: hidden; display: none; }
+[data-testid="stDeployButton"] { visibility: hidden; display: none; }
+[data-testid="stDecoration"]   { visibility: hidden; display: none; }
+
+header[data-testid="stHeader"] {
+    background: transparent !important;
+    z-index: 9999 !important;
+}
+
+[data-testid="stToolbar"] {
+    visibility: visible !important;
+    display: flex !important;
+}
+
+[data-testid="stExpandSidebarButton"],
+[data-testid="collapsedControl"] {
+    visibility: visible !important;
+    display: flex !important;
+    position: fixed !important;
+    top: 14px !important;
+    left: 14px !important;
+    z-index: 999999 !important;
+    background: #0d1e26 !important;
+    border: 1px solid #4ade80 !important;
+    border-radius: 8px !important;
+    padding: 6px 10px !important;
+    box-shadow: 0 4px 14px rgba(74, 222, 128, 0.3) !important;
+    cursor: pointer !important;
+}
+[data-testid="stExpandSidebarButton"] svg,
+[data-testid="collapsedControl"] svg {
+    color: #4ade80 !important;
+    stroke: #4ade80 !important;
+    fill: #4ade80 !important;
+}
+
 .block-container {
-    padding-top: 0.8rem !important;
+    padding-top: 1rem !important;
     padding-bottom: 2rem !important;
     max-width: 100% !important;
 }
@@ -475,6 +511,7 @@ def load_preview(png_path, size=(180, 180)):
             norm_path,
             os.path.join(ROOT, norm_path),
             os.path.join(ROOT, "data", "chips", "previews", os.path.basename(norm_path)),
+            os.path.join(ROOT, "assets", "tiles", os.path.basename(norm_path)),
         ]
         for p in candidates:
             if os.path.exists(p):
@@ -652,15 +689,15 @@ def build_map(records, show_ndvi=False, show_preds=True, min_conf=0.0):
 def render_kpi_ribbon(n_total, n_green, n_nongreen, coverage_pct, green_area_km2, acc):
     """Renders five KPI cards vertically inside the sidebar."""
     kpis = [
-        ("SAMPLED TILES",      str(n_total),              "256 x 256 px chips",          "Sentinel-2 10m",    "#cbd5e1", "rgba(255,255,255,0.05)"),
-        ("GREEN CANOPIES",     str(n_green),               "Detected vegetation tiles",    "NDVI > 0.30",       "#8fae9b", "rgba(74,124,89,0.2)"),
-        ("IMPERVIOUS / URBAN", str(n_nongreen),            "Built-up & bare soil tiles",   "Non-vegetated",     "#94a3b8", "rgba(255,255,255,0.05)"),
-        ("GREEN COVER RATIO",  f"{coverage_pct:.1f}%",    "of sampled AOI area",          f"~{green_area_km2:.0f} km2", "#b8977e", "rgba(184,151,126,0.15)"),
-        ("MODEL ACCURACY",     f"{acc:.1f}%",              "ResNet-18 best checkpoint",    "Val epoch 9",       "#a3b18a", "rgba(255,255,255,0.05)"),
+        ("SAMPLED TILES",      str(n_total),              "256 x 256 px chips",          "Sentinel-2 10m",    "#3b82f6", "rgba(59, 130, 246, 0.15)"),
+        ("GREEN CANOPIES",     str(n_green),               "Detected vegetation tiles",    "NDVI > 0.30",       "#22c55e", "rgba(34, 197, 94, 0.15)"),
+        ("IMPERVIOUS / URBAN", str(n_nongreen),            "Built-up & bare soil tiles",   "Non-vegetated",     "#64748b", "rgba(100, 116, 139, 0.15)"),
+        ("GREEN COVER RATIO",  f"{coverage_pct:.1f}%",    "of sampled AOI area",          f"~{green_area_km2:.0f} km2", "#f59e0b", "rgba(245, 158, 11, 0.15)"),
+        ("MODEL ACCURACY",     f"{acc:.1f}%",              "ResNet-18 best checkpoint",    "Val epoch 9",       "#8b5cf6", "rgba(139, 92, 246, 0.15)"),
     ]
     for label, value, sub, badge, accent, badge_bg in kpis:
         st.markdown(f"""
-        <div class="sidebar-kpi-card" style="border-left: 2px solid {accent};">
+        <div class="sidebar-kpi-card" style="border-left: 3px solid {accent};">
           <div class="sidebar-kpi-label">{label}</div>
           <div class="sidebar-kpi-value" style="color:{accent};">{value}</div>
           <div class="sidebar-kpi-sub">{sub}</div>
@@ -675,17 +712,6 @@ def render_kpi_ribbon(n_total, n_green, n_nongreen, coverage_pct, green_area_km2
 
 def render_sidebar(records):
     with st.sidebar:
-        # Back to landing page button
-        st.markdown("""
-        <a href="http://localhost:3000" target="_self" class="back-landing-btn" id="sidebar-back-landing" title="Return to Landing Page">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="19" y1="12" x2="5" y2="12"></line>
-            <polyline points="12 19 5 12 12 5"></polyline>
-          </svg>
-          <span>&larr; Back to Landing Page</span>
-        </a>
-        """, unsafe_allow_html=True)
-
         # Status pill
         st.markdown("""
         <div class="status-pill">
@@ -694,34 +720,64 @@ def render_sidebar(records):
         </div>
         """, unsafe_allow_html=True)
 
-        # Layer controls
+        # Back to landing page button
         st.markdown("""
-        <div class="sidebar-section-title">Layer Controls</div>
+        <a href="http://localhost:3000" target="_self" class="back-landing-btn" id="sidebar-back-landing" title="Return to Landing Page">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          <span>&larr; Back to Landing Page</span>
+        </a>
         """, unsafe_allow_html=True)
-        with st.container():
-            show_preds = st.toggle("Prediction overlay", value=True)
-            show_ndvi  = st.toggle("NDVI vegetation heatmap", value=False)
 
-        # Heatmap legend — shown right below the NDVI toggle (Matte swatches)
+        # === SIDEBAR CONTROL PANEL ===
         st.markdown("""
-        <div class="heatmap-legend">
-          <div class="heatmap-legend-title">NDVI Heatmap Legend</div>
+        <div class="sidebar-section-title" style="margin-top: 14px;">Sidebar Control Panel</div>
+        """, unsafe_allow_html=True)
+
+        # 1. Layer Controls
+        st.markdown("<div style='font-size:11px;font-weight:600;color:#94a3b8;letter-spacing:0.8px;text-transform:uppercase;margin:6px 0 4px 0;'>Layer Toggles</div>", unsafe_allow_html=True)
+        show_preds = st.toggle("Prediction overlay", value=True)
+        show_ndvi  = st.toggle("NDVI vegetation heatmap", value=False)
+
+        # 2. Quick-Reference Legends (Explaining tile color classifications)
+        st.markdown("""
+        <div class="heatmap-legend" style="margin-top: 10px; margin-bottom: 12px;">
+          <div class="heatmap-legend-title">Tile Classification &amp; NDVI Legend</div>
+          <div style="font-size: 10px; color: #94a3b8; margin-bottom: 6px; font-weight: 600; text-transform: uppercase;">Prediction Overlay</div>
           <div class="heatmap-legend-row">
-            <span class="heatmap-swatch" style="background:#4a7c59;"></span>
+            <span class="heatmap-swatch" style="background:#22c55e; border: 1px solid #16a34a;"></span>
             <div>
-              <div class="heatmap-legend-label">Dense Canopy</div>
-              <div class="heatmap-legend-desc">Healthy mature trees, dense parks, thick forest cover</div>
+              <div class="heatmap-legend-label">Green Space Canopy</div>
+              <div class="heatmap-legend-desc">Parks, trees, urban vegetation (NDVI &gt; 0.30)</div>
             </div>
           </div>
           <div class="heatmap-legend-row">
-            <span class="heatmap-swatch" style="background:#8fae9b;"></span>
+            <span class="heatmap-swatch" style="background:#64748b; border: 1px solid #475569;"></span>
+            <div>
+              <div class="heatmap-legend-label">Urban / Impervious</div>
+              <div class="heatmap-legend-desc">Roads, concrete rooftops, paved structures</div>
+            </div>
+          </div>
+          <div style="height: 1px; background: rgba(255,255,255,0.08); margin: 8px 0;"></div>
+          <div style="font-size: 10px; color: #94a3b8; margin-bottom: 6px; font-weight: 600; text-transform: uppercase;">NDVI Heatmap Spectrum</div>
+          <div class="heatmap-legend-row">
+            <span class="heatmap-swatch" style="background:#26d900;"></span>
+            <div>
+              <div class="heatmap-legend-label">Dense Canopy</div>
+              <div class="heatmap-legend-desc">Healthy mature trees, dense parks, forest</div>
+            </div>
+          </div>
+          <div class="heatmap-legend-row">
+            <span class="heatmap-swatch" style="background:#669900;"></span>
             <div>
               <div class="heatmap-legend-label">Sparse Vegetation</div>
               <div class="heatmap-legend-desc">Lawns, shrubland, agricultural patches</div>
             </div>
           </div>
           <div class="heatmap-legend-row">
-            <span class="heatmap-swatch" style="background:#64748b;"></span>
+            <span class="heatmap-swatch" style="background:#a65900;"></span>
             <div>
               <div class="heatmap-legend-label">Urban / Impervious</div>
               <div class="heatmap-legend-desc">Roads, concrete rooftops, bare soil</div>
@@ -730,20 +786,20 @@ def render_sidebar(records):
         </div>
         """, unsafe_allow_html=True)
 
-        # Confidence filter
-        st.markdown("""
-        <div class="sidebar-section-title">Filter by Confidence</div>
-        """, unsafe_allow_html=True)
+        # 3. Confidence Threshold Slider
+        st.markdown("<div style='font-size:11px;font-weight:600;color:#94a3b8;letter-spacing:0.8px;text-transform:uppercase;margin:6px 0 4px 0;'>Inference Threshold</div>", unsafe_allow_html=True)
         min_conf = st.slider(
-            "Minimum prediction confidence",
-            min_value=0.5,
+            "Minimum confidence",
+            min_value=0.0,
             max_value=1.0,
-            value=0.5,
+            value=0.0,
             step=0.05,
-            format="%.2f",
-            label_visibility="collapsed",
+            help="Hide tiles where the model confidence is below this threshold. Higher values show only high-certainty predictions.",
         )
+
         st.markdown("<div style='margin-bottom:14px'></div>", unsafe_allow_html=True)
+
+        # 4. Dataset KPIs Section Title
         st.markdown("""
         <div class="sidebar-section-title">Dataset KPIs</div>
         """, unsafe_allow_html=True)
@@ -946,6 +1002,42 @@ def main():
 
     # Inject CSS
     st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
+
+    # Auto-expand sidebar & scroll to top
+    components.html("""
+    <script>
+    function forceExpandSidebar() {
+        try {
+            const win = window.parent;
+            const doc = win.document;
+
+            // Clear any localStorage key that tells Streamlit the sidebar is collapsed
+            try {
+                for (let i = 0; i < win.localStorage.length; i++) {
+                    const k = win.localStorage.key(i);
+                    if (k && k.indexOf('SidebarCollapsed') !== -1) {
+                        win.localStorage.setItem(k, 'false');
+                    }
+                }
+            } catch(e) {}
+
+            // Click the expand button if present
+            const expandBtn = doc.querySelector('[data-testid="stExpandSidebarButton"] button, [data-testid="stExpandSidebarButton"], [data-testid="collapsedControl"] button, [data-testid="collapsedControl"]');
+            const sidebar = doc.querySelector('[data-testid="stSidebar"]');
+            if (expandBtn && (!sidebar || sidebar.getAttribute('aria-expanded') === 'false')) {
+                expandBtn.click();
+            }
+
+            const scrollContainers = doc.querySelectorAll('[data-testid="stSidebar"] [data-testid="stSidebarUserContent"], [data-testid="stSidebar"] section, [data-testid="stSidebar"] > div');
+            scrollContainers.forEach(el => { el.scrollTop = 0; });
+        } catch(e) {}
+    }
+    setTimeout(forceExpandSidebar, 50);
+    setTimeout(forceExpandSidebar, 250);
+    setTimeout(forceExpandSidebar, 700);
+    setTimeout(forceExpandSidebar, 1500);
+    </script>
+    """, height=0, width=0)
 
     # Load data
     with st.spinner("Initialising platform..."):
